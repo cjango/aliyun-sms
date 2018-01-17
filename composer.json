@@ -1,0 +1,34 @@
+{
+    "name": "cjango/aliyun-sms",
+    "description": "cjango sms sdk for thinkphp",
+    "keywords": ["cjango", "sms", "sdk"],
+    "type": "think-extend",
+    "homepage": "https://github.com/cjango/aliyun-sms",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jason.Chen",
+            "email": "chenjxlg@163.com",
+            "homepage": "https://www.cjango.com/"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.6.0",
+        "topthink/think-installer": "^1.0",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "topthink/framework": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "cjango\\aliyun\\": "src/"
+        }
+    },
+    "extra": {
+        "think-config": {
+            "alisms": "config.php"
+        }
+    }
+}
