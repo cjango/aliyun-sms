@@ -8,6 +8,6 @@
 // +------------------------------------------------+
 
 return [
-    'AccessKeyID'     => '',
+    'AccessKeyId'     => '',
     'AccessKeySecret' => '',
 ];
