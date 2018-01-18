@@ -22,6 +22,10 @@ class Sms
     private $AccessKeyId      = '';
     private $AccessKeySecret  = '';
 
+    public $result;
+
+    private static $instance;
+
     public function __construct()
     {
         $config = Config::get('alisms');
@@ -30,6 +34,7 @@ class Sms
         }
         $this->AccessKeyId     = $config['AccessKeyId'];
         $this->AccessKeySecret = $config['AccessKeySecret'];
+
     }
 
     /**
@@ -38,7 +43,10 @@ class Sms
      */
     public static function instance()
     {
-        return new self;
+        if (is_null(self::$instance)) {
+            self::$instance = new self;
+        }
+        return self::$instance;
     }
 
     /**
@@ -49,14 +57,14 @@ class Sms
      * @param  array  $TemplateParam [模板变量]
      * @param  string $OutId         [外部ID]
      */
-    public function send(string $recive, string $sign, string $tplCode, array $TemplateParam = [], string $OutId = '')
+    public function send(string $recive, string $sign, string $tplCode, array $templateParam = [], string $outId = '')
     {
         $params                  = [];
         $params["PhoneNumbers"]  = $recive;
         $params["SignName"]      = $sign;
         $params["TemplateCode"]  = $tplCode;
-        $params['TemplateParam'] = $TemplateParam;
-        $params['OutId']         = $OutId;
+        $params['TemplateParam'] = $templateParam;
+        $params['OutId']         = $outId ?: self::orderid();
 
         if (!empty($params["TemplateParam"]) && is_array($params["TemplateParam"])) {
             $params["TemplateParam"] = json_encode($params["TemplateParam"], JSON_UNESCAPED_UNICODE);
@@ -91,10 +99,21 @@ class Sms
         $body     = json_decode($body);
 
         if ($body->Code == 'OK') {
+            $this->result = array_merge($params, (array) $body);
             return true;
         } else {
             throw new \Exception($body->Message);
         }
+    }
+
+    /**
+     * 创建一个20位的数字订单号
+     * @param  string $prefix 订单号前缀
+     * @return string
+     */
+    private function orderid()
+    {
+        return date('ymdHis') . sprintf("%08d", mt_rand(0, 99999999));
     }
 
     private function sign($params)
